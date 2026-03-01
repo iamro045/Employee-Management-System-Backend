@@ -28,4 +28,29 @@ router.delete("/:id", authMiddleware, async (req, res) => {
   await Employee.findByIdAndDelete(req.params.id);
   res.json({ message: "Employee deleted" });
 });
+router.put("/:id", authMiddleware, async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ error: "Access denied" });
+  }
+
+  const updatedEmployee = await Employee.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
+
+  res.json(updatedEmployee);
+});
+
+router.get("/stats/summary", authMiddleware, async (req, res) => {
+  const totalEmployees = await Employee.countDocuments();
+
+  const departments = await Employee.distinct("department");
+  const totalDepartments = departments.length;
+
+  res.json({
+    totalEmployees,
+    totalDepartments,
+  });
+});
 export default router;
