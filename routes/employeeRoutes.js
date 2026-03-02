@@ -1,6 +1,7 @@
 import express from "express";
 import Employee from "../models/Employee.js";
 import authMiddleware from "../middleware/authMiddleware.js";
+import { logActivity } from "../middleware/activityLogger.js";
 
 const router = express.Router();
 
@@ -53,4 +54,14 @@ router.get("/stats/summary", authMiddleware, async (req, res) => {
     totalDepartments,
   });
 });
+
+router.delete(
+  "/:id",
+  authMiddleware,
+  logActivity("Deleted employee"),
+  async (req, res) => {
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: "Deleted" });
+  }
+);
 export default router;
