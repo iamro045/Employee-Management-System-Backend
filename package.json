@@ -1,7 +1,7 @@
 {
   "name": "employee-backend",
   "version": "1.0.0",
-  "type": "module",   ✅ MUST BE HERE (top level)
+  "type": "module",   
 
   "scripts": {
     "start": "node server.js"
